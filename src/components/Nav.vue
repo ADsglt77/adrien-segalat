@@ -1,22 +1,7 @@
-<template>
-  <nav>
-    <a href="#about" class="nav-link"><p>ABOUT</p></a>
-    <a href="#experience" class="nav-link"><p>WORK</p></a>
-    <a href="#contact" class="nav-link"><p>CONTACT</p></a>
-    <Button padding="0.6rem" borderRadius="50%" @click="toggleMute">
-      <Icon
-        :icon="isMuted ? 'iconoir:sound-off' : 'iconoir:sound-high'"
-        :width="16"
-        :height="16"
-        :stroke-width="3"
-      />
-    </Button>
-  </nav>
-</template>
-
 <script setup lang="ts">
 import { ref, inject } from 'vue'
 import { Icon } from '@iconify/vue'
+import { scrambleText } from '../lib/textScramble'
 import Button from './Button.vue'
 
 const audioRef = inject<{ value: HTMLAudioElement | null }>('audioRef')
@@ -28,7 +13,36 @@ const toggleMute = () => {
     audioRef.value.muted = isMuted.value
   }
 }
+
+const handleScramble = (e: Event, text: string) => {
+  const target = (e.currentTarget as HTMLElement)?.querySelector('p')
+  if (target) {
+    scrambleText(target, text, { duration: 1000, fps: 10 })
+  }
+}
 </script>
+
+<template>
+  <nav>
+    <a href="#about" class="nav-link" @mouseenter="handleScramble($event, 'ABOUT')">
+      <p>ABOUT</p>
+    </a>
+    <a href="#experience" class="nav-link" @mouseenter="handleScramble($event, 'WORK')">
+      <p>WORK</p>
+    </a>
+    <a href="#contact" class="nav-link" @mouseenter="handleScramble($event, 'CONTACT')">
+      <p>CONTACT</p>
+    </a>
+    <Button padding="0.6rem" borderRadius="50%" @click="toggleMute">
+      <Icon
+        :icon="isMuted ? 'iconoir:sound-off' : 'iconoir:sound-high'"
+        :width="16"
+        :height="16"
+        :stroke-width="3"
+      />
+    </Button>
+  </nav>
+</template>
 
 <style scoped>
 nav {
