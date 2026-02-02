@@ -58,7 +58,7 @@ button {
   display: flex;
   align-items: center;
   color: var(--text);
-  font-family: var(--font-mono, 'Space Mono', monospace);
+  font-family: var(--font-mono);
   cursor: pointer;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
