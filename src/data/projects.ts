@@ -14,6 +14,14 @@ import {
   iconMysql,
 } from './icons'
 
+import bibliothequeVideo from '../assets/projects/videos/bibliotheque.mp4'
+import jardinierVideo from '../assets/projects/videos/jardinier.mp4'
+
+import condatPoster from '../assets/projects/poster/condat.jpg'
+import bibliothequePoster from '../assets/projects/poster/bibliotheque.jpg'
+import jardinierPoster from '../assets/projects/poster/jardinier.jpg'
+import restoPoster from '../assets/projects/poster/resto.jpg'
+
 export interface Technology {
   icon: string
   label: string
@@ -57,7 +65,6 @@ export function mapTechnologies(techI: string[]): Technology[] {
     .filter((tech): tech is Technology => tech !== undefined)
 }
 
-
 export const projects: Project[] = [
   {
     id: 'condat',
@@ -71,7 +78,7 @@ export const projects: Project[] = [
     },
     video: {
       src: undefined,
-      poster: undefined,
+      poster: condatPoster,
     },
   },
   {
@@ -84,8 +91,8 @@ export const projects: Project[] = [
       github: 'https://github.com/ADsglt77/bibliotheque',
     },
     video: {
-      src: undefined,
-      poster: undefined,
+      src: bibliothequeVideo,
+      poster: bibliothequePoster,
     },
   },
   {
@@ -98,35 +105,8 @@ export const projects: Project[] = [
       github: 'https://github.com/ADsglt77/jardinierV2',
     },
     video: {
-      src: undefined,
-      poster: undefined,
-    },
-  },
-  {
-    id: 'congres',
-    title: 'PROJET Congres',
-    description: 'A faire',
-    technologies: mapTechnologies(['php', 'mysql', 'css']),
-    links: {
-      github: 'https://github.com/ADsglt77/congres',
-    },
-    video: {
-      src: undefined,
-      poster: undefined,
-    },
-  },
-  {
-    id: 'seminaire',
-    title: 'PROJET Seminaire',
-    description:
-      "Le projet Séminaire est une application web PHP qui permet la gestion d'un séminaire comportant plusieurs conférences. Cette application offre les fonctionnalités comme la consultation du programme des conférences, l'inscription des participants, la sélection des conférences par les participants et une interface d'administration pour visualiser les inscriptions",
-    technologies: mapTechnologies(['php', 'mysql', 'css']),
-    links: {
-      github: 'https://github.com/ADsglt77/seminaire',
-    },
-    video: {
-      src: undefined,
-      poster: undefined,
+      src: jardinierVideo,
+      poster: jardinierPoster,
     },
   },
   {
@@ -140,7 +120,7 @@ export const projects: Project[] = [
     },
     video: {
       src: undefined,
-      poster: undefined,
+      poster: restoPoster,
     },
   },
 ]
