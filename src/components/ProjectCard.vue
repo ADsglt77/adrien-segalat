@@ -48,9 +48,18 @@ const actions = computed(() => {
         :src="project.video.src"
         :poster="project.video.poster"
         controls
+        controlslist="nodownload noplaybackrate"
+        disablePictureInPicture
+        muted
         preload="metadata"
         class="project-video"
       ></video>
+      <img
+        v-else-if="project.video.poster"
+        :src="project.video.poster"
+        :alt="`Aperçu du projet ${project.title}`"
+        class="project-poster"
+      />
       <div v-else class="project-placeholder">
         <Icon :icon="iconPlay" :width="48" :height="48" />
         <span>Aucune vidéo disponible</span>
@@ -58,7 +67,7 @@ const actions = computed(() => {
     </div>
 
     <div class="project-content">
-      <h2 class="project-title">{{ project.title }}</h2>
+      <h4 class="project-title">{{ project.title }}</h4>
       <p class="project-description">{{ project.description }}</p>
 
       <div class="project-technologies">
@@ -115,10 +124,16 @@ article:hover {
   overflow: hidden;
 }
 
-.project-video {
+.project-video,
+.project-poster {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.project-video::-webkit-media-controls-volume-slider,
+.project-video::-webkit-media-controls-mute-button {
+  display: none !important;
 }
 
 .project-placeholder {
@@ -144,7 +159,6 @@ article:hover {
 }
 
 .project-title {
-  font-family: var(--font-title);
   text-transform: uppercase;
 }
 
