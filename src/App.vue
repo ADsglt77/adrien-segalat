@@ -11,12 +11,14 @@ import audioFile from './assets/sound/Flickering-Flames.mp3'
 const progress = ref(0)
 const ready = ref(false)
 const entered = ref(false)
+const isButtonFading = ref(false)
 const title = ref('ADRIEN')
 const audioRef = ref<HTMLAudioElement>()
 const loadingStatusContainerRef = ref<HTMLElement>()
 const loadingStatusHeight = ref(0)
 
 provide('audioRef', audioRef)
+provide('entered', entered)
 
 onMounted(() => {
   const startTime = Date.now()
@@ -49,6 +51,7 @@ watch(ready, () => {
 
 const handleEnter = () => {
   entered.value = true
+  isButtonFading.value = true
   audioRef.value?.play().catch(() => {})
 }
 </script>
@@ -59,16 +62,22 @@ const handleEnter = () => {
   <!-- loader (loader + enter) -->
   <div v-show="!entered" class="loader" role="dialog" aria-modal="true">
     <!-- Titre avec effet de remplissage -->
-    <div class="hero-title">
-      <h1>{{ title }}</h1>
-      <h1 :style="{ width: `${progress}%` }">{{ title }}</h1>
-    </div>
+    <h1
+      :style="{
+        backgroundImage: `linear-gradient(to right, var(--text) 0%, var(--text) ${progress}%, color-mix(in srgb, var(--text) 10%, transparent) ${progress}%, color-mix(in srgb, var(--text) 10%, transparent) 100%)`,
+      }"
+    >
+      {{ title }}
+    </h1>
     <!-- Div séparée en dessous pour loading et bouton -->
     <div ref="loadingStatusContainerRef" class="loading-status-container">
-      <p v-show="!ready" role="status" aria-live="polite">
-        Loading... {{ Math.round(progress) }}%
-      </p>
-      <Button v-show="ready" label="ENTER WEBSITE" @click="handleEnter" />
+      <p v-show="!ready" role="status" aria-live="polite">Loading... {{ Math.round(progress) }}%</p>
+      <Button
+        v-show="ready"
+        :class="{ 'button--fade': isButtonFading }"
+        label="ENTER WEBSITE"
+        @click="handleEnter"
+      />
     </div>
   </div>
 
@@ -92,36 +101,33 @@ const handleEnter = () => {
   flex-direction: column;
 }
 
-.hero-title {
-  position: relative;
-  z-index: 1;
-}
-
-.hero-title h1 {
-  color: color-mix(in srgb, var(--text) 10%, transparent);
-}
-
-.hero-title h1.after {
-  color: var(--text);
-  margin-bottom: v-bind(loadingStatusHeight + 'px');
-}
-
-.hero-title h1:nth-of-type(2) {
+h1 {
   position: absolute;
-  top: 0;
-  left: 0;
-  color: var(--text);
-  overflow: hidden;
-  transition: width 0.08s linear;
+  z-index: 1;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-image 0.08s linear;
 }
 
 .loading-status-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  position: relative;
+  top: 15%;
   color: var(--muted);
   gap: var(--spacing-md);
+}
+
+.button--fade {
+  animation: button-fade 1s ease-out forwards;
+}
+
+@keyframes button-fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 .section {
