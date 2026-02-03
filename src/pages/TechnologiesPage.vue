@@ -1,0 +1,148 @@
+<script setup lang="ts">
+import { Icon } from '@iconify/vue'
+import {
+  iconVue,
+  iconSymfony,
+  iconNuxt,
+  iconPhp,
+  iconCss,
+  iconLinux,
+  iconTypeScript,
+  iconPhotoshop,
+  iconBdd,
+  iconCursor,
+  iconDocker,
+  iconPython,
+  iconGithubAction,
+  iconFlutter,
+} from '../data/icons'
+import type { Technology } from '../data/projects'
+
+const technologies: Technology[] = [
+  { icon: iconVue, label: 'VueJS' },
+  { icon: iconSymfony, label: 'Symfony' },
+  { icon: iconNuxt, label: 'NuxtJS' },
+  { icon: iconPhp, label: 'PHP' },
+  { icon: iconCss, label: 'CSS' },
+  { icon: iconLinux, label: 'Linux' },
+  { icon: iconTypeScript, label: 'TypeScript' },
+  { icon: iconPhotoshop, label: 'Photoshop' },
+  { icon: iconBdd, label: 'BDD' },
+  { icon: iconCursor, label: 'Cursor' },
+  { icon: iconDocker, label: 'Docker' },
+  { icon: iconPython, label: 'Python' },
+  { icon: iconGithubAction, label: 'GitHub' },
+  { icon: iconFlutter, label: 'Flutter' },
+]
+
+const technologiesReversed = [...technologies].reverse()
+</script>
+
+<template>
+  <section id="tech" class="section technologies">
+    <div class="tech-row tech-row--left">
+      <div class="tech-row-inner">
+        <div
+          v-for="tech in technologies"
+          :key="'l1-' + tech.label"
+          class="tech-item"
+        >
+          <Icon :icon="tech.icon" :width="40" :height="40" />
+          <h3>{{ tech.label }}</h3>
+        </div>
+        <div
+          v-for="tech in technologies"
+          :key="'l2-' + tech.label"
+          class="tech-item"
+        >
+          <Icon :icon="tech.icon" :width="40" :height="40" />
+          <h3>{{ tech.label }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="tech-row tech-row--right">
+      <div class="tech-row-inner">
+        <div
+          v-for="tech in technologiesReversed"
+          :key="'r1-' + tech.label"
+          class="tech-item"
+        >
+          <Icon :icon="tech.icon" :width="40" :height="40" />
+          <h3>{{ tech.label }}</h3>
+        </div>
+        <div
+          v-for="tech in technologiesReversed"
+          :key="'r2-' + tech.label"
+          class="tech-item"
+        >
+          <Icon :icon="tech.icon" :width="34" :height="34" />
+          <h3>{{ tech.label }}</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<style scoped>
+.section.technologies {
+  min-height: 0;
+  height: 50vh;
+  max-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3xl);
+}
+
+.tech-row {
+  width: 100%;
+  overflow: hidden;
+}
+
+.tech-row-inner {
+  display: flex;
+  width: max-content;
+  gap: var(--spacing-md);
+  text-transform: uppercase;
+}
+
+.tech-row--left .tech-row-inner {
+  animation: tech-scroll-left 45s linear infinite;
+}
+
+.tech-row--right .tech-row-inner {
+  animation: tech-scroll-right 45s linear infinite;
+}
+
+.tech-row--left:has(.tech-item:hover) .tech-row-inner {
+  animation-play-state: paused;
+}
+
+.tech-row--right:has(.tech-item:hover) .tech-row-inner {
+  animation-play-state: paused;
+}
+
+.tech-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-lg);
+  color: var(--muted);
+  transition: color 0.25s ease;
+}
+
+.tech-item:hover {
+  color: var(--text);
+}
+
+@keyframes tech-scroll-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes tech-scroll-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+</style>
