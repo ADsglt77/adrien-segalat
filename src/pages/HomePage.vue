@@ -87,6 +87,7 @@ onUnmounted(() => {
     <h5 :class="{ 'visible slide-right': showElements }" class="meta time">
       {{ currentTime }}
     </h5>
+    <div class="gradient"></div>
   </section>
 </template>
 
@@ -95,6 +96,8 @@ onUnmounted(() => {
   position: relative;
   overflow: hidden;
 }
+
+
 
 .overlay {
   position: absolute;
