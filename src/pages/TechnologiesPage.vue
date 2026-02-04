@@ -117,7 +117,9 @@ const technologiesReversed = [...technologies].reverse()
 
 .tech-item h3 {
   line-height: 0;
-  transition: color 0.25s ease, -webkit-text-stroke 0.25s ease;
+  transition:
+    color 0.25s ease,
+    -webkit-text-stroke 0.25s ease;
 }
 
 .tech-item:nth-child(odd) h3 {
