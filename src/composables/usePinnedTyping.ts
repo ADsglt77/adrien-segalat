@@ -29,6 +29,9 @@ export function usePinnedTyping(
             hasTyped = true
             displayedText.value = '' // Reset avant de commencer
             typing(displayedText, fullText, { duration: typingDuration })
+          } else if (!entry.isIntersecting && hasTyped) {
+            hasTyped = false
+            displayedText.value = ''
           }
         })
       },
