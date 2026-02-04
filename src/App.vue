@@ -150,6 +150,7 @@ h1 {
 
 .section {
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height pour mobile */
   display: flex;
   flex-direction: column;
   align-items: center;
