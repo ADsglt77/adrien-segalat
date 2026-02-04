@@ -8,10 +8,10 @@ export interface TimelineItem {
 
 export const timelineData: TimelineItem[] = [
   {
-    date: '2020/2023',
+    date: '2020/2021',
     organization: 'Lycée Turgot (Limoges)',
-    role: 'Seconde (option SI-CIT), Première (Maths/NSI/Physique-Chimie), Terminale (Maths/NSI)',
-    description: 'Baccalauréat général mention Très Bien',
+    role: 'Seconde (option SI-CIT)',
+    description: 'Baccalauréat général',
     type: 'formation',
   },
   {
@@ -19,6 +19,13 @@ export const timelineData: TimelineItem[] = [
     organization: 'Police Nationale',
     role: 'Stage de trois jours',
     type: 'work',
+  },
+  {
+    date: '2021/2022',
+    organization: 'Lycée Turgot (Limoges)',
+    role: 'Première (Maths/NSI/Physique-Chimie)',
+    description: 'Baccalauréat général',
+    type: 'formation',
   },
   {
     date: 'Juin 2021',
@@ -29,9 +36,16 @@ export const timelineData: TimelineItem[] = [
     type: 'work',
   },
   {
+    date: '2022/2023',
+    organization: 'Lycée Turgot (Limoges)',
+    role: 'Terminale (Maths/NSI)',
+    description: 'Baccalauréat général obtenu',
+    type: 'formation',
+  },
+  {
     date: '2023/2024',
     organization: 'Lycée Valadon (Limoges)',
-    role: 'BTS SIO (Services Informatiques aux Organisations)',
+    role: 'BTS SIO (Services Informatiques aux Organisations) - 1ère année',
     description: 'Option "Certification"',
     type: 'formation',
   },
@@ -49,10 +63,30 @@ export const timelineData: TimelineItem[] = [
     type: 'work',
   },
   {
+    date: '2024/2025',
+    organization: 'Lycée Valadon (Limoges)',
+    role: 'BTS SIO (Services Informatiques aux Organisations) - 2ème année',
+    description: 'Major de promotion',
+    type: 'formation',
+  },
+  {
     date: 'Janvier/Février 2025',
     organization: 'Condat Basket Club',
     role: 'Stage de sept semaines',
     description: 'Site vitrine + dashboard, NuxtJS/Vue/TypeScript/Prisma',
+    type: 'work',
+  },
+  {
+    date: '2025/2026',
+    organization: 'Beaupeyrat (Limoges)',
+    role: 'Bachelor C.D.W.M. (Concepteur Développeur Web et Mobile)',
+    type: 'formation',
+  },
+  {
+    date: 'Depuis Septembre 2025',
+    organization: 'Therasoft',
+    role: 'Alternant - Développeur full-stack',
+    description: 'Alternance en parallèle du Bachelor C.D.W.M.',
     type: 'work',
   },
 ]
