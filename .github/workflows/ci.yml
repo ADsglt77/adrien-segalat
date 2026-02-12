@@ -13,7 +13,7 @@ jobs:
               with:
                   bun-version: latest
             - run: bun install
-            - run: bunx @biomejs/biome ci . --reporter=github
+            - run: cd frontend && bunx @biomejs/biome ci . --reporter=github
 
     build:
         name: Build
@@ -24,7 +24,7 @@ jobs:
               with:
                   bun-version: latest
             - run: bun install
-            - run: bun run build
+            - run: cd frontend && bun run build
     knip:
         name: Knip Check
         runs-on: ubuntu-latest
@@ -34,4 +34,4 @@ jobs:
               with:
                   bun-version: latest
             - run: bun install
-            - run: bunx knip --reporter github-actions
+            - run: cd frontend && bunx knip --reporter github-actions

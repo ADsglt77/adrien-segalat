@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 import { inject, type Ref, ref } from "vue";
-import cvPdf from "../assets/CV-Adrien.pdf";
-import aboutImg from "../assets/img/about-silhouette-in-forest.jpg";
 import Button from "../components/Button.vue";
 import { useFadeIn } from "../composables/useFadeIn";
 import { usePinnedTyping } from "../composables/usePinnedTyping";
@@ -18,11 +16,10 @@ const displayedText = ref("");
 const sectionRef = ref<HTMLElement | null>(null);
 const paragraphRef = ref<HTMLParagraphElement | null>(null);
 const buttonRef = ref<HTMLElement | null>(null);
-const socialLinksRef = ref<HTMLElement | null>(null);
 
 const downloadCV = () => {
 	const link = document.createElement("a");
-	link.href = cvPdf;
+	link.href = "/CV-Adrien.pdf";
 	link.download = "CV-Adrien-Segalat.pdf";
 	document.body.appendChild(link);
 	link.click();
@@ -54,7 +51,7 @@ useFadeIn(buttonRef, {
 
 <template>
   <section ref="sectionRef" id="about" class="section about">
-    <img :src="aboutImg" alt="About" />
+    <img src="/img/about-silhouette-in-forest.jpg" alt="About" />
     <div class="title">
       <h2 class="heading-stroke">{{ displayedText }}</h2>
       <h2 class="heading">{{ displayedText }}</h2>
