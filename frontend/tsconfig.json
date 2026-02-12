@@ -9,7 +9,8 @@
 		"cypress.config.*",
 		"nightwatch.conf.*",
 		"playwright.config.*",
-		"eslint.config.*"
+		"eslint.config.*",
+		"../backend/src/index.ts"
 	],
 	"exclude": ["src/**/__tests__/*"],
 	"compilerOptions": {
