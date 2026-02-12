@@ -15,25 +15,12 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
-		}
-	},
-	"overrides": [
-		{
-			"includes": ["**/*.vue"],
-			"linter": {
-				"rules": {
-					"correctness": {
-						"noUnusedVariables": "off",
-						"noUnusedImports": "off"
-					},
-					"style": {
-						"noNonNullAssertion": "off"
-					}
-				}
+			"recommended": true,
+			"style": {
+				"noNonNullAssertion": "off"
 			}
 		}
-	],
+	},
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "double"
@@ -46,5 +33,21 @@
 				"organizeImports": "on"
 			}
 		}
-	}
+	},
+	"overrides": [
+		{
+			"includes": ["frontend/**/*.vue"],
+			"linter": {
+				"rules": {
+					"correctness": {
+						"noUnusedVariables": "off",
+						"noUnusedImports": "off"
+					},
+					"style": {
+						"useConst": "off"
+					}
+				}
+			}
+		}
+	]
 }

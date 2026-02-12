@@ -130,9 +130,7 @@ Command block format MUST be:
 ```bash
 git add path/to/file1 path/to/file2
 git commit -m "<message 1>"
-```
 
-```bash
 git add path/to/file3
 git commit -m "<message 2>"
 ```

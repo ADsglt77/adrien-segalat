@@ -4,6 +4,7 @@ import contactImg from "../assets/img/contact-campfire-night.jpg";
 import Button from "../components/Button.vue";
 import { useFadeIn } from "../composables/useFadeIn";
 import { usePinnedTyping } from "../composables/usePinnedTyping";
+import client from "../lib/client";
 
 const entered = inject<Ref<boolean>>("entered")!;
 
@@ -35,20 +36,27 @@ const formData = ref({
 });
 
 const isSubmitting = ref(false);
+const submitStatus = ref<"idle" | "success" | "error">("idle");
 
 const handleSubmit = async (e: Event) => {
 	e.preventDefault();
 	if (isSubmitting.value) return;
 
 	isSubmitting.value = true;
+	submitStatus.value = "idle";
 
-	// Simuler l'envoi du formulaire
-	await new Promise((resolve) => setTimeout(resolve, 1000));
+	const { data, error } = await client.contact.post(formData.value);
 
-	// Ici vous pouvez ajouter la logique d'envoi (email, API, etc.)
-	console.log("Form submitted:", formData.value);
+	if (error) {
+		console.error("Erreur lors de l'envoi :", error);
+		submitStatus.value = "error";
+		isSubmitting.value = false;
+		return;
+	}
 
-	// Réinitialiser le formulaire
+	console.log("Message envoyé :", data);
+	submitStatus.value = "success";
+
 	formData.value = {
 		name: "",
 		email: "",
@@ -57,7 +65,6 @@ const handleSubmit = async (e: Event) => {
 	};
 
 	isSubmitting.value = false;
-	alert("Message envoyé avec succès !");
 };
 </script>
 
@@ -114,6 +121,12 @@ const handleSubmit = async (e: Event) => {
           :label="isSubmitting ? 'Envoi...' : 'Envoyer'"
           :disabled="isSubmitting"
         />
+        <p v-if="submitStatus === 'success'" class="form-feedback success">
+          ✅ Message envoyé avec succès !
+        </p>
+        <p v-if="submitStatus === 'error'" class="form-feedback error">
+          ❌ Erreur lors de l'envoi. Veuillez réessayer.
+        </p>
       </form>
   </section>
 </template>
@@ -235,5 +248,30 @@ const handleSubmit = async (e: Event) => {
   .section.contact .content {
     max-width: 100%;
   }
+}
+
+.form-feedback {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  animation: fadeIn 0.3s ease;
+}
+
+.form-feedback.success {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+.form-feedback.error {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>
