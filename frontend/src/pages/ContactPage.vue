@@ -2,6 +2,7 @@
 import { inject, type Ref, ref } from "vue";
 import contactImg from "../assets/img/contact-campfire-night.jpg";
 import Button from "../components/Button.vue";
+import { iconSend } from "../data/icons";
 import { useFadeIn } from "../composables/useFadeIn";
 import { usePinnedTyping } from "../composables/usePinnedTyping";
 import client from "../lib/client";
@@ -118,6 +119,7 @@ const handleSubmit = async (e: Event) => {
         </div>
         <Button
           type="submit"
+          :icon="iconSend"
           :label="isSubmitting ? 'Envoi...' : 'Envoyer'"
           :disabled="isSubmitting"
         />
