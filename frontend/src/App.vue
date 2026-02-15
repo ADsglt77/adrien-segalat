@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import {
-	nextTick,
-	onMounted,
-	onUnmounted,
-	provide,
-	ref,
-	watch,
-	watchEffect,
-} from "vue";
+import { onMounted, onUnmounted, provide, ref, watch, watchEffect } from "vue";
 import audioFile from "./assets/sound/Flickering-Flames.mp3";
 import Button from "./components/Button.vue";
 import Footer from "./components/Footer.vue";
@@ -23,10 +15,8 @@ const progress = ref(0);
 const ready = ref(false);
 const entered = ref(false);
 const isButtonFading = ref(false);
-const title = ref("ADRIEN");
+const title = "ADRIEN";
 const audioRef = ref<HTMLAudioElement>();
-const loadingStatusContainerRef = ref<HTMLElement>();
-const loadingStatusHeight = ref(0);
 
 const STORAGE_ANIMATIONS = "portfolio-animations-enabled";
 const animationsEnabled = ref(
@@ -41,27 +31,21 @@ watch(
 		try {
 			localStorage.setItem(STORAGE_ANIMATIONS, String(enabled));
 		} catch {
-			/* ignore */
+			/* quota exceeded */
 		}
 	},
 	{ immediate: true },
 );
 
-// Configuration de la vitesse de scroll
-// Ajustez ces valeurs pour modifier la vitesse :
-// - lerp: 0.01-0.1 (plus bas = plus lent/smooth, plus haut = plus rapide)
-// - duration: durée de l'animation en secondes
-// - wheelMultiplier: vitesse de la molette (1 = normal, 2 = 2x plus rapide)
-// - touchMultiplier: vitesse sur mobile (2 = normal, 4 = 2x plus rapide)
 const {
 	start: startLenis,
 	stop: stopLenis,
 	getInstance: getLenisInstance,
 } = useLenis({
-	lerp: 0.5, // Vitesse de lissage (défaut: 0.06)
-	duration: 3, // Durée de l'animation (défaut: 1.2s)
-	wheelMultiplier: 0.5, // Vitesse molette (défaut: 1)
-	touchMultiplier: 1, // Vitesse mobile (défaut: 2)
+	lerp: 0.5,
+	duration: 3,
+	wheelMultiplier: 0.5,
+	touchMultiplier: 1,
 });
 
 provide("audioRef", audioRef);
@@ -89,15 +73,6 @@ onMounted(() => {
 	requestAnimationFrame(updateProgress);
 });
 
-// Calculer la hauteur quand ready change (le bouton apparaît)
-watch(ready, () => {
-	nextTick(() => {
-		if (loadingStatusContainerRef.value) {
-			loadingStatusHeight.value = loadingStatusContainerRef.value.offsetHeight;
-		}
-	});
-});
-
 const handleEnter = () => {
 	isButtonFading.value = true;
 	audioRef.value?.play().catch(() => {});
@@ -107,7 +82,6 @@ const handleEnter = () => {
 	}, 1000);
 };
 
-// Scroll lock : bloquer le scroll avant ENTER, libérer après
 watchEffect(() => {
 	document.body.style.overflow = entered.value ? "" : "hidden";
 });
@@ -120,10 +94,8 @@ onUnmounted(() => {
 
 <template>
   <audio ref="audioRef" :src="audioFile" loop preload="auto" muted></audio>
-  <!-- enlever attribut muted en production -->
-  <!-- loader (loader + enter) -->
+
   <div v-show="!entered" class="loader" role="dialog" aria-modal="true">
-    <!-- Titre avec effet de remplissage -->
     <h1
       :style="{
         backgroundImage: `linear-gradient(to right, var(--text) 0%, var(--text) ${progress}%, color-mix(in srgb, var(--text) 10%, transparent) ${progress}%, color-mix(in srgb, var(--text) 10%, transparent) 100%)`,
@@ -131,8 +103,7 @@ onUnmounted(() => {
     >
       {{ title }}
     </h1>
-    <!-- Div séparée en dessous pour loading et bouton -->
-    <div ref="loadingStatusContainerRef" class="loading-status-container">
+    <div class="loading-status-container">
       <Transition name="fade" mode="out-in">
         <p v-if="!ready" key="loading" role="status" aria-live="polite">
           Loading... {{ progress }}%
@@ -148,7 +119,6 @@ onUnmounted(() => {
     </div>
   </div>
 
-  <!-- Site (après ENTER) -->
   <main v-show="entered" class="site-content">
     <HomePage />
     <div class="gradient-overlay"></div>
@@ -162,7 +132,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* loader (loader + enter) */
 .loader {
   height: 100vh;
   display: flex;
@@ -195,15 +164,6 @@ h1 {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-}
-
-.section {
-  height: 100vh;
-  height: 100dvh; /* Dynamic viewport height pour mobile */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
 
 .gradient-overlay {
