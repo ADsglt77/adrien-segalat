@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { inject, ref } from "vue";
+import { computed, inject, ref } from "vue";
 import { scrambleText } from "../lib/textScramble";
 import { Icon } from "@iconify/vue";
+import { iconCheck, iconClose } from "../data/icons";
 
 interface Props {
 	label?: string;
@@ -11,6 +12,10 @@ interface Props {
 	padding?: string;
 	borderRadius?: string;
 	type?: "button" | "submit" | "reset";
+	success?: boolean;
+	successIcon?: string;
+	error?: boolean;
+	errorIcon?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -21,6 +26,10 @@ const props = withDefaults(defineProps<Props>(), {
 	padding: "var(--spacing-md)",
 	borderRadius: "var(--radius-lg) 0",
 	type: "button",
+	success: false,
+	successIcon: iconCheck,
+	error: false,
+	errorIcon: iconClose,
 });
 
 const emit = defineEmits<{
@@ -33,6 +42,12 @@ const animationsEnabled = inject<{ value: boolean } | undefined>(
 const buttonRef = ref<HTMLElement>();
 const labelRef = ref<HTMLElement>();
 const displayLabel = ref(props.label);
+
+const currentIcon = computed(() => {
+	if (props.error && props.errorIcon) return props.errorIcon;
+	if (props.success && props.successIcon) return props.successIcon;
+	return props.icon;
+});
 
 const handleClick = (event: MouseEvent) => {
 	if (!props.disabled) {
@@ -55,7 +70,7 @@ const handleMouseEnter = () => {
   <button
     ref="buttonRef"
     :type="type"
-    :class="{ 'btn--disabled': disabled }"
+    :class="{ 'btn--disabled': disabled, 'btn--success': success, 'btn--error': error }"
     :style="{
       padding: padding,
       borderRadius: borderRadius,
@@ -65,19 +80,19 @@ const handleMouseEnter = () => {
     @mouseenter="handleMouseEnter"
   >
     <Icon
-      v-if="icon && iconPosition === 'left'"
-      :icon="icon"
+      v-if="currentIcon"
+      :icon="currentIcon"
       :width="18"
       :height="18"
-      class="btn__icon btn__icon--left"
+      :class="['btn__icon', (iconPosition === 'left' || error || success) ? 'btn__icon--left' : 'btn__icon--right']"
       aria-hidden
     />
     <slot>
       <span ref="labelRef" class="btn__label">{{ displayLabel }}</span>
     </slot>
     <Icon
-      v-if="icon && iconPosition === 'right'"
-      :icon="icon"
+      v-if="currentIcon && iconPosition === 'right' && !error && !success"
+      :icon="currentIcon"
       :width="18"
       :height="18"
       class="btn__icon btn__icon--right"
@@ -117,5 +132,63 @@ button {
 .btn--disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.btn--success {
+  background-color: color-mix(in srgb, var(--success) 10%, transparent);
+  border-color: color-mix(in srgb, var(--success) 50%, transparent);
+  color: var(--success);
+}
+
+.btn--success:hover {
+  background-color: color-mix(in srgb, var(--success) 20%, transparent);
+  border-color: color-mix(in srgb, var(--success) 70%, transparent);
+}
+
+.btn--success .btn__icon {
+  animation: successIcon 0.6s ease;
+}
+
+@keyframes successIcon {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(0deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.btn--error {
+  background-color: color-mix(in srgb, var(--error) 10%, transparent);
+  border-color: color-mix(in srgb, var(--error) 50%, transparent);
+  color: var(--error);
+}
+
+.btn--error:hover {
+  background-color: color-mix(in srgb, var(--error) 20%, transparent);
+  border-color: color-mix(in srgb, var(--error) 70%, transparent);
+}
+
+.btn--error .btn__icon {
+  animation: errorIcon 0.6s ease;
+}
+
+@keyframes errorIcon {
+  0% {
+    transform: scale(0) rotate(180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(0deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
 }
 </style>
