@@ -2,11 +2,11 @@
 import { inject, type Ref, ref } from "vue";
 import contactImg from "../assets/img/contact-campfire-night.jpg";
 import Button from "../components/Button.vue";
-import Input from "../components/Input.vue";
 import HeadingStroke from "../components/HeadingStroke.vue";
-import { iconSend } from "../data/icons";
+import Input from "../components/Input.vue";
 import { useFadeIn } from "../composables/useFadeIn";
 import { usePinnedTyping } from "../composables/usePinnedTyping";
+import { iconSend } from "../data/icons";
 import client from "../lib/client";
 
 const entered = inject<Ref<boolean>>("entered")!;
@@ -31,32 +31,31 @@ useFadeIn(formRef, {
 	translateY: 30,
 });
 
-const formData = ref({
-	name: "",
-	email: "",
-	subject: "",
-	message: "",
-});
+const EMPTY_FORM = { name: "", email: "", subject: "", message: "" };
+const FEEDBACK_DURATION = 3000;
 
-const errors = ref({
-	name: "",
-	email: "",
-	subject: "",
-	message: "",
-});
-
+const formData = ref({ ...EMPTY_FORM });
+const errors = ref({ ...EMPTY_FORM });
 const isSubmitting = ref(false);
 const isSuccess = ref(false);
 const isError = ref(false);
 
-const validateForm = (): boolean => {
-	errors.value = {
-		name: "",
-		email: "",
-		subject: "",
-		message: "",
-	};
+const resetErrors = () => {
+	errors.value = { ...EMPTY_FORM };
+};
 
+const showTemporaryState = (
+	state: { value: boolean },
+	duration = FEEDBACK_DURATION,
+) => {
+	state.value = true;
+	setTimeout(() => {
+		state.value = false;
+	}, duration);
+};
+
+const validateForm = (): boolean => {
+	resetErrors();
 	let isValid = true;
 
 	if (!formData.value.name.trim()) {
@@ -90,51 +89,28 @@ const handleSubmit = async (e: Event) => {
 	if (isSubmitting.value) return;
 
 	if (!validateForm()) {
-		isError.value = true;
-		setTimeout(() => {
-			isError.value = false;
-		}, 3000);
+		showTemporaryState(isError);
 		return;
 	}
 
 	isSubmitting.value = true;
 	isError.value = false;
 
-	const { data, error } = await client.contact.post(formData.value);
+	const { error } = await client.contact.post(formData.value);
+
+	isSubmitting.value = false;
 
 	if (error) {
-		console.error("Erreur lors de l'envoi :", error);
-		isSubmitting.value = false;
-		isError.value = true;
-		setTimeout(() => {
-			isError.value = false;
-		}, 3000);
+		showTemporaryState(isError);
 		return;
 	}
 
-	console.log("Message envoyé :", data);
-
-	isSuccess.value = true;
-	isSubmitting.value = false;
+	showTemporaryState(isSuccess);
 
 	setTimeout(() => {
-		formData.value = {
-			name: "",
-			email: "",
-			subject: "",
-			message: "",
-		};
-
-		errors.value = {
-			name: "",
-			email: "",
-			subject: "",
-			message: "",
-		};
-
-		isSuccess.value = false;
-		isError.value = false;
-	}, 3000);
+		formData.value = { ...EMPTY_FORM };
+		resetErrors();
+	}, FEEDBACK_DURATION);
 };
 </script>
 
@@ -212,24 +188,15 @@ const handleSubmit = async (e: Event) => {
 }
 
 .section.contact .title {
-  align-self: center;
-}
-
-.section.contact .content {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-2xl);
-  align-self: center;
+	align-self: center;
 }
 
 form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-sm);
 }
-
 
 @media (max-width: 900px) {
   .section.contact {
@@ -240,11 +207,6 @@ form {
 
   .section.contact img {
     height: clamp(240px, 44vh, 400px);
-  }
-
-
-  .section.contact .content {
-    max-width: 100%;
   }
 }
 
