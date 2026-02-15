@@ -4,15 +4,9 @@
 		"env.d.ts",
 		"src/**/*",
 		"src/**/*.vue",
-		"vite.config.*",
-		"vitest.config.*",
-		"cypress.config.*",
-		"nightwatch.conf.*",
-		"playwright.config.*",
-		"eslint.config.*",
+		"vite.config.ts",
 		"../backend/src/index.ts"
 	],
-	"exclude": ["src/**/__tests__/*"],
 	"compilerOptions": {
 		"composite": false,
 		"incremental": true,
