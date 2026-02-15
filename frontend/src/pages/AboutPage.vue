@@ -2,6 +2,7 @@
 import { Icon } from "@iconify/vue";
 import { inject, type Ref, ref } from "vue";
 import Button from "../components/Button.vue";
+import HeadingStroke from "../components/HeadingStroke.vue";
 import { iconDownload } from "../data/icons";
 import { useFadeIn } from "../composables/useFadeIn";
 import { usePinnedTyping } from "../composables/usePinnedTyping";
@@ -17,6 +18,7 @@ const displayedText = ref("");
 const sectionRef = ref<HTMLElement | null>(null);
 const paragraphRef = ref<HTMLParagraphElement | null>(null);
 const buttonRef = ref<HTMLElement | null>(null);
+const isDownloaded = ref(false);
 
 const downloadCV = () => {
 	const link = document.createElement("a");
@@ -25,6 +27,11 @@ const downloadCV = () => {
 	document.body.appendChild(link);
 	link.click();
 	document.body.removeChild(link);
+	
+	isDownloaded.value = true;
+	setTimeout(() => {
+		isDownloaded.value = false;
+	}, 3000);
 };
 
 usePinnedTyping(sectionRef, fullText, displayedText, {
@@ -54,14 +61,18 @@ useFadeIn(buttonRef, {
   <section ref="sectionRef" id="about" class="section about">
     <img src="/img/about-silhouette-in-forest.jpg" alt="About" />
     <div class="title">
-      <h2 class="heading-stroke">{{ displayedText }}</h2>
-      <h2 class="heading">{{ displayedText }}</h2>
+      <HeadingStroke :text="displayedText" />
     </div>
     <div class="subtitle">
       <p ref="paragraphRef"></p>
       <div class="actions">
         <div ref="buttonRef">
-          <Button :icon="iconDownload" label="Télécharger mon CV" @click="downloadCV" />
+          <Button 
+            :icon="iconDownload" 
+            label="Télécharger mon CV" 
+            :success="isDownloaded"
+            @click="downloadCV" 
+          />
         </div>
         <div ref="socialLinksRef" class="social-links">
           <a
@@ -105,26 +116,6 @@ useFadeIn(buttonRef, {
 
 .section.about .title {
   align-self: center;
-  position: relative;
-}
-
-.section.about .title h2 {
-  position: absolute;
-  left: -200px;
-  text-transform: uppercase;
-}
-
-.section.about .title .heading-stroke {
-  color: transparent;
-  -webkit-text-stroke: 40px var(--bg);
-  z-index: 1;
-  clip-path: none; /* IMPORTANT: typing visible */
-}
-
-.section.about .title .heading {
-  color: var(--text);
-  z-index: 2;
-  clip-path: none; /* sinon le typing sera caché */
 }
 
 .section.about .subtitle {
@@ -180,9 +171,6 @@ useFadeIn(buttonRef, {
     height: clamp(240px, 44vh, 400px);
   }
 
-  .section.about .title h1 {
-    max-width: 100%;
-  }
 
   .section.about .subtitle {
     max-width: 100%;
