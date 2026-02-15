@@ -3,8 +3,8 @@ import type { FadeInOptions } from "../lib/fadeIn";
 import { fadeIn } from "../lib/fadeIn";
 
 type UseFadeInOptions = {
-	active?: Ref<boolean>; // ex: entered injecté depuis App
-	threshold?: number; // seuil IntersectionObserver (ex: 0.3)
+	active?: Ref<boolean>;
+	threshold?: number;
 } & FadeInOptions;
 
 export function useFadeIn(

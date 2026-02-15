@@ -2,9 +2,9 @@ import { inject, nextTick, onUnmounted, type Ref, watch } from "vue";
 import { typing } from "../lib/typing";
 
 type Options = {
-	active?: Ref<boolean>; // ex: entered injecté depuis App
-	typingDuration?: number; // durée du typing automatique (ex: 3000)
-	threshold?: number; // seuil IntersectionObserver (ex: 0.3)
+	active?: Ref<boolean>;
+	typingDuration?: number;
+	threshold?: number;
 };
 
 export function usePinnedTyping(

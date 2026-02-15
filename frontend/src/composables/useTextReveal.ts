@@ -3,8 +3,8 @@ import type { TextRevealOptions } from "../lib/textReveal";
 import { textReveal } from "../lib/textReveal";
 
 type UseTextRevealOptions = {
-	active?: Ref<boolean>; // ex: entered injecté depuis App
-	threshold?: number; // seuil IntersectionObserver (ex: 0.3)
+	active?: Ref<boolean>;
+	threshold?: number;
 } & TextRevealOptions;
 
 export function useTextReveal(
@@ -20,7 +20,6 @@ export function useTextReveal(
 	let hasRevealed = false;
 	let observer: IntersectionObserver | null = null;
 
-	// Sans animation : afficher le texte une fois, pas d'observer ni de clear
 	const applyTextStatic = () => {
 		if (elementRef.value && active?.value) {
 			elementRef.value.textContent = text.trim().replace(/\s+/g, " ");

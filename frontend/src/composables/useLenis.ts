@@ -18,12 +18,12 @@ function loop(time: number): void {
 }
 
 interface LenisOptions {
-	lerp?: number; // Vitesse de lissage (0.01 = très lent/smooth, 0.1 = rapide) - défaut: 0.06
-	duration?: number; // Durée de l'animation de scroll en secondes - défaut: 1.2
-	wheelMultiplier?: number; // Multiplicateur de vitesse de la molette - défaut: 1
-	touchMultiplier?: number; // Multiplicateur de vitesse pour le touch (mobile) - défaut: 2
-	smoothWheel?: boolean; // Active le smooth scroll avec la molette - défaut: true
-	easing?: (t: number) => number; // Fonction d'easing personnalisée
+	lerp?: number;
+	duration?: number;
+	wheelMultiplier?: number;
+	touchMultiplier?: number;
+	smoothWheel?: boolean;
+	easing?: (t: number) => number;
 }
 
 export function useLenis(options: LenisOptions = {}) {
