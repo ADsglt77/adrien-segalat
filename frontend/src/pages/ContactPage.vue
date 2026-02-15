@@ -2,6 +2,8 @@
 import { inject, type Ref, ref } from "vue";
 import contactImg from "../assets/img/contact-campfire-night.jpg";
 import Button from "../components/Button.vue";
+import Input from "../components/Input.vue";
+import HeadingStroke from "../components/HeadingStroke.vue";
 import { iconSend } from "../data/icons";
 import { useFadeIn } from "../composables/useFadeIn";
 import { usePinnedTyping } from "../composables/usePinnedTyping";
@@ -36,36 +38,103 @@ const formData = ref({
 	message: "",
 });
 
+const errors = ref({
+	name: "",
+	email: "",
+	subject: "",
+	message: "",
+});
+
 const isSubmitting = ref(false);
-const submitStatus = ref<"idle" | "success" | "error">("idle");
+const isSuccess = ref(false);
+const isError = ref(false);
 
-const handleSubmit = async (e: Event) => {
-	e.preventDefault();
-	if (isSubmitting.value) return;
-
-	isSubmitting.value = true;
-	submitStatus.value = "idle";
-
-	const { data, error } = await client.contact.post(formData.value);
-
-	if (error) {
-		console.error("Erreur lors de l'envoi :", error);
-		submitStatus.value = "error";
-		isSubmitting.value = false;
-		return;
-	}
-
-	console.log("Message envoyé :", data);
-	submitStatus.value = "success";
-
-	formData.value = {
+const validateForm = (): boolean => {
+	errors.value = {
 		name: "",
 		email: "",
 		subject: "",
 		message: "",
 	};
 
+	let isValid = true;
+
+	if (!formData.value.name.trim()) {
+		errors.value.name = "Le nom est requis";
+		isValid = false;
+	}
+
+	if (!formData.value.email.trim()) {
+		errors.value.email = "L'email est requis";
+		isValid = false;
+	} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.value.email)) {
+		errors.value.email = "Format d'email invalide";
+		isValid = false;
+	}
+
+	if (!formData.value.subject.trim()) {
+		errors.value.subject = "Le sujet est requis";
+		isValid = false;
+	}
+
+	if (!formData.value.message.trim()) {
+		errors.value.message = "Le message est requis";
+		isValid = false;
+	}
+
+	return isValid;
+};
+
+const handleSubmit = async (e: Event) => {
+	e.preventDefault();
+	if (isSubmitting.value) return;
+
+	if (!validateForm()) {
+		isError.value = true;
+		setTimeout(() => {
+			isError.value = false;
+		}, 3000);
+		return;
+	}
+
+	isSubmitting.value = true;
+	isError.value = false;
+
+	const { data, error } = await client.contact.post(formData.value);
+
+	if (error) {
+		console.error("Erreur lors de l'envoi :", error);
+		isSubmitting.value = false;
+		isError.value = true;
+		setTimeout(() => {
+			isError.value = false;
+		}, 3000);
+		return;
+	}
+
+	console.log("Message envoyé :", data);
+
+	isSuccess.value = true;
 	isSubmitting.value = false;
+
+	setTimeout(() => {
+		formData.value = {
+			name: "",
+			email: "",
+			subject: "",
+			message: "",
+		};
+
+		errors.value = {
+			name: "",
+			email: "",
+			subject: "",
+			message: "",
+		};
+
+		isSuccess.value = false;
+		isError.value = false;
+	}, 3000);
 };
 </script>
 
@@ -73,62 +142,50 @@ const handleSubmit = async (e: Event) => {
   <section ref="sectionRef" id="contact" class="section contact">
     <img :src="contactImg" alt="Contact" />
     <div class="title">
-      <h2 class="heading-stroke">{{ displayedText }}</h2>
-      <h2 class="heading">{{ displayedText }}</h2>
+      <HeadingStroke :text="displayedText" />
     </div>
-      <form ref="formRef" @submit="handleSubmit" class="contact-form">
-        <div class="form-group">
-          <label for="name">Nom</label>
-          <input
-            id="name"
-            v-model="formData.name"
-            type="text"
-            required
-            placeholder="Votre nom"
-          />
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            id="email"
-            v-model="formData.email"
-            type="email"
-            required
-            placeholder="votre.email@example.com"
-          />
-        </div>
-        <div class="form-group">
-          <label for="subject">Sujet</label>
-          <input
-            id="subject"
-            v-model="formData.subject"
-            type="text"
-            required
-            placeholder="Sujet de votre message"
-          />
-        </div>
-        <div class="form-group">
-          <label for="message">Message</label>
-          <textarea
-            id="message"
-            v-model="formData.message"
-            required
-            rows="6"
-            placeholder="Votre message..."
-          ></textarea>
-        </div>
+      <form ref="formRef" @submit="handleSubmit" novalidate>
+        <Input
+          id="name"
+          v-model="formData.name"
+          type="text"
+          label="Nom"
+          placeholder="Votre nom"
+          :error="errors.name"
+        />
+        <Input
+          id="email"
+          v-model="formData.email"
+          type="email"
+          label="Email"
+          placeholder="votre.email@example.com"
+          :error="errors.email"
+        />
+        <Input
+          id="subject"
+          v-model="formData.subject"
+          type="text"
+          label="Sujet"
+          placeholder="Sujet de votre message"
+          :error="errors.subject"
+        />
+        <Input
+          id="message"
+          v-model="formData.message"
+          :textarea="true"
+          :rows="6"
+          label="Message"
+          placeholder="Votre message..."
+          :error="errors.message"
+        />
         <Button
           type="submit"
           :icon="iconSend"
           :label="isSubmitting ? 'Envoi...' : 'Envoyer'"
           :disabled="isSubmitting"
+          :success="isSuccess"
+          :error="isError"
         />
-        <p v-if="submitStatus === 'success'" class="form-feedback success">
-          ✅ Message envoyé avec succès !
-        </p>
-        <p v-if="submitStatus === 'error'" class="form-feedback error">
-          ❌ Erreur lors de l'envoi. Veuillez réessayer.
-        </p>
       </form>
   </section>
 </template>
@@ -156,26 +213,6 @@ const handleSubmit = async (e: Event) => {
 
 .section.contact .title {
   align-self: center;
-  position: relative;
-}
-
-.section.contact .title h2 {
-  position: absolute;
-  left: -200px;
-  text-transform: uppercase;
-}
-
-.section.contact .title .heading-stroke {
-  color: transparent;
-  -webkit-text-stroke: 40px var(--bg);
-  z-index: 1;
-  clip-path: none;
-}
-
-.section.contact .title .heading {
-  color: var(--text);
-  z-index: 2;
-  clip-path: none;
 }
 
 .section.contact .content {
@@ -186,50 +223,13 @@ const handleSubmit = async (e: Event) => {
   align-self: center;
 }
 
-.contact-form {
+form {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xl);
-  align-self: center;
+  gap: var(--spacing-sm);
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-}
-
-.form-group label {
-  color: var(--text);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.form-group input,
-.form-group textarea {
-  padding: var(--spacing-md);
-  background: color-mix(in srgb, var(--text) 5%, transparent);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
-  color: var(--text);
-  font-family: var(--font-mono);
-  transition: all 0.3s ease;
-  resize: none;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: var(--glass-border-hover);
-  background: color-mix(in srgb, var(--text) 8%, transparent);
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-  color: var(--muted);
-  opacity: 0.6;
-}
 
 @media (max-width: 900px) {
   .section.contact {
@@ -242,38 +242,10 @@ const handleSubmit = async (e: Event) => {
     height: clamp(240px, 44vh, 400px);
   }
 
-  .section.contact .title h2 {
-    position: static;
-    left: 0;
-  }
 
   .section.contact .content {
     max-width: 100%;
   }
 }
 
-.form-feedback {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-md);
-  animation: fadeIn 0.3s ease;
-}
-
-.form-feedback.success {
-  color: #4ade80;
-  background: rgba(74, 222, 128, 0.1);
-  border: 1px solid rgba(74, 222, 128, 0.3);
-}
-
-.form-feedback.error {
-  color: #f87171;
-  background: rgba(248, 113, 113, 0.1);
-  border: 1px solid rgba(248, 113, 113, 0.3);
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 </style>
