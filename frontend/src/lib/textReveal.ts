@@ -1,6 +1,6 @@
 export interface TextRevealOptions {
-	delay?: number; // Délai entre chaque lettre (en ms)
-	instant?: boolean; // Afficher le texte immédiatement (sans animation)
+	delay?: number;
+	instant?: boolean;
 }
 
 export function textReveal(
@@ -10,7 +10,6 @@ export function textReveal(
 ): void {
 	const { delay = 50, instant = false } = options;
 
-	// Normaliser le texte : trim + remplacer les espaces multiples par un seul
 	const normalizedText = text.trim().replace(/\s+/g, " ");
 
 	if (instant) {
@@ -20,17 +19,14 @@ export function textReveal(
 
 	element.innerHTML = "";
 
-	// Diviser le texte en mots pour préserver l'intégrité des mots
 	const words = normalizedText.split(" ");
 	const spans: HTMLSpanElement[] = [];
 
 	words.forEach((word, wordIndex) => {
-		// Créer un span pour chaque mot pour éviter les coupures
 		const wordSpan = document.createElement("span");
 		wordSpan.style.display = "inline-block";
 		wordSpan.style.whiteSpace = "nowrap";
 
-		// Créer un span pour chaque caractère du mot
 		const wordChars = word.split("");
 		wordChars.forEach((char) => {
 			const charSpan = document.createElement("span");
@@ -42,7 +38,6 @@ export function textReveal(
 			spans.push(charSpan);
 		});
 
-		// Ajouter un espace après chaque mot (sauf le dernier)
 		if (wordIndex < words.length - 1) {
 			const spaceSpan = document.createElement("span");
 			spaceSpan.textContent = "\u00A0";
@@ -56,7 +51,6 @@ export function textReveal(
 		element.appendChild(wordSpan);
 	});
 
-	// Fisher-Yates shuffle
 	const indices = Array.from({ length: spans.length }, (_, i) => i);
 	for (let i = indices.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));

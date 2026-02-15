@@ -1,10 +1,10 @@
 export interface FadeInOptions {
-	duration?: number; // Durée de l'animation en ms
-	delay?: number; // Délai avant de commencer l'animation en ms
-	translateY?: number; // Distance de translation verticale (px)
-	translateX?: number; // Distance de translation horizontale (px)
-	opacity?: number; // Opacité finale (0-1)
-	instant?: boolean; // Afficher immédiatement sans animation
+	duration?: number;
+	delay?: number;
+	translateY?: number;
+	translateX?: number;
+	opacity?: number;
+	instant?: boolean;
 }
 
 export function fadeIn(

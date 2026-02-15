@@ -58,11 +58,3 @@ export function scrambleText(
 
 	animate();
 }
-
-export function scrambleFromEvent(
-	e: Event,
-	finalText: string,
-	options: ScrambleOptions = {},
-): void {
-	scrambleText(e.currentTarget as HTMLElement, finalText, options);
-}
