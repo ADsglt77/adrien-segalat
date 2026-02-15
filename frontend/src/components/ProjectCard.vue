@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 import { computed } from "vue";
-import { iconGithubAction, iconLink, iconPdf, iconPlay } from "../data/icons";
+import { iconGithub, iconLink, iconPdf, iconPlay } from "../data/icons";
 import type { Project } from "../data/projects";
 
 interface Props {
@@ -30,7 +30,7 @@ const actions = computed(() => {
 	}
 	if (props.project.links.github) {
 		items.push({
-			icon: iconGithubAction,
+			icon: iconGithub,
 			href: props.project.links.github,
 			ariaLabel: "Voir le code source sur GitHub",
 			external: true,
