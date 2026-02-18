@@ -48,9 +48,7 @@ const setupObserver = async () => {
 					10,
 				);
 
-				if (entry.isIntersecting) {
-					if (hasAnimated.has(index)) return;
-
+				if (entry.isIntersecting && !hasAnimated.has(index)) {
 					hasAnimated.add(index);
 					if (withAnimations) {
 						const target = entry.target as HTMLElement;
@@ -59,13 +57,10 @@ const setupObserver = async () => {
 							delay: index * 100,
 							translateY: 30,
 						});
-					}
-				} else if (withAnimations) {
-					if (hasAnimated.has(index)) {
-						hasAnimated.delete(index);
+					} else {
 						const target = entry.target as HTMLElement;
-						target.style.opacity = "0";
-						target.style.transform = "translateY(30px)";
+						target.style.opacity = "1";
+						target.style.transform = "translate(0, 0)";
 					}
 				}
 			});
